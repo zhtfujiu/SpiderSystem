@@ -1,9 +1,9 @@
 # coding=UTF-8
 import wx
-from test_sizer import Example
 from gui_login import GUI_LOGIN
 from gui_spider import GUI_SPIDER
 from gui_data import GUI_DATA
+
 
 import py2app
 

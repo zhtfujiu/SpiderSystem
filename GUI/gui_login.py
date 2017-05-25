@@ -1,5 +1,6 @@
 # coding=UTF-8
 import wx
+from backstage.doing_auto_login import Doing_Auto_login
 
 class GUI_LOGIN(wx.Frame):
     def __init__(self, parent):
@@ -78,7 +79,17 @@ class GUI_LOGIN(wx.Frame):
         pass
 
     def login(self,event):
-        pass
+
+        username = self.username_blank.GetLineText(0)
+        psw = self.psw_blank.GetLineText(0)
+        print username, psw
+        # 实例化Auto_login_baidu类
+        auto_login = Doing_Auto_login(username, psw)
+        flag_login = auto_login.login()
+        # 后续爬取个人信息未完成
+        flag_save = auto_login.get_user_baike_info()
+
+        event.Skip()
 
 #
 #

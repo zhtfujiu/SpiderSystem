@@ -2,10 +2,13 @@
 
 import time
 from doing_mysql import Doing_mysql
+from selenium import webdriver
 
 class Doing_Auto_login(object):
-    def __init__(self, driver):
-        self.driver = driver
+    def __init__(self, username, psw):
+        self.driver = webdriver.Chrome()
+        self.username = username
+        self.psw = psw
 
     def login(self):
 
@@ -20,8 +23,9 @@ class Doing_Auto_login(object):
                 psw_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__password")
                 login_btn = self.driver.find_element_by_id("TANGRAM__PSP_3__submit")
 
-                username = raw_input('请输入您的百度账号：\n')
-                psw = raw_input('请输入您的百度账号密码：\n')
+                # username = raw_input('请输入您的百度账号：\n')
+                # psw = raw_input('请输入您的百度账号密码：\n')
+
 
                 # username = '伏久飞天'
                 # psw = '5556zht'
@@ -29,10 +33,11 @@ class Doing_Auto_login(object):
                 username_blank.clear()
                 psw_blank.clear()
 
-                username_blank.send_keys(unicode(username, 'utf-8'))  # 编码问题，这里需要加上unicode
+                username_blank.send_keys(self.username)
+                    # unicode(self.username, 'utf-8'))  # 编码问题，这里需要加上unicode
                 # UnicodeDecodeError: 'utf8' codec can't decode byte 0xe4 in position 0: unexpected end of data
-                time.sleep(2)
-                psw_blank.send_keys(psw)
+                # time.sleep(2)
+                psw_blank.send_keys(self.psw)
                 time.sleep(2)
 
                 login_btn.click()
@@ -45,12 +50,13 @@ class Doing_Auto_login(object):
                     print '登录失败，请核对账户或密码！'
                 else:
                     # 登录成功，转到下一个所需页面
-                    print username, '登录成功！'
-                    self.username = username
+                    print self.username, '登录成功！'
+                    # self.username = self.username
 
-                    break
+                    return True
         except Exception, e:
             print '登录过程发生错误：', e
+            return False
 
     def get_user_baike_info(self):
         try:
@@ -84,6 +90,10 @@ class Doing_Auto_login(object):
             print self.username,'用户的个人信息已保存至baike数据库的',self.username,'表中。'
             # 关闭数据库
             doing_mysql.do_end_sql()
+
+            return True  # 返回真，证明存储完成
+
         except Exception, e:
             print '获取并存储个人信息时发生错误：', e
+            return False
 
