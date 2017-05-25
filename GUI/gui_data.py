@@ -1,0 +1,112 @@
+# coding=UTF-8
+import wx, wx.grid
+
+class GUI_DATA(wx.Frame):
+    def __init__(self, parent):
+        super(GUI_DATA, self).__init__(parent, title="数据分析系统", size=(1200, 800))
+        self.parent = parent
+        self.Bind(wx.EVT_CLOSE, self.frameClose)  # 对系统进行监听关闭键
+        self.InitUI()
+        self.Centre()
+        self.Show()
+
+    def InitUI(self):
+        panel = wx.Panel(self)
+
+        # 最外层盒子，垂直方向
+        self.boxsizer = wx.BoxSizer(wx.VERTICAL)
+
+        # 第1个内层盒子，内建两个盒子,一左一右
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+
+        # 左侧细长的盒子，垂直
+        hbox1_1 = wx.BoxSizer(wx.VERTICAL)
+
+        # =============左侧第一个功能==========
+        hbox1_1_1 = wx.BoxSizer(wx.HORIZONTAL)
+        static_str1 = wx.StaticText(panel, label='要导出Excel文件的根词条：')
+        hbox1_1_1.Add(static_str1, flag=wx.ALIGN_CENTER_VERTICAL)
+        self.entry_blank = wx.TextCtrl(panel)#, size=(200,20))
+        hbox1_1_1.Add(self.entry_blank, flag=wx.ALIGN_CENTER_VERTICAL)
+
+        hbox1_1.Add(hbox1_1_1, flag=wx.ALL, border=15)
+
+        btn_export = wx.Button(panel, label='导出Excel', size=(120,30))
+        hbox1_1.Add(btn_export, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
+        hbox1_1.Add((-1,20))
+        # ==============左侧第二个功能==========
+
+        hbox1_1_2 = wx.BoxSizer(wx.VERTICAL)
+        static_str2 = wx.StaticText(panel, label='【开发者选项】\n请按语法规定输入SQL语句：')
+        hbox1_1_2.Add(static_str2, flag=wx.EXPAND | wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
+        self.sql_blank = wx.TextCtrl(panel, style=wx.TE_MULTILINE, size=(240, 100))  # , size=(200,20))
+        hbox1_1_2.Add(self.sql_blank, flag=wx.EXPAND | wx.TOP, border=15)
+
+        hbox1_1.Add(hbox1_1_2, flag=wx.ALL, border=15)
+
+        btn_dosql = wx.Button(panel, label='执行SQL语句', size=(120, 30))
+        hbox1_1.Add(btn_dosql, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
+        hbox1_1.Add((-1, 20))
+
+        # ===============右侧大表==============
+        hbox1.Add(hbox1_1, proportion=2)
+
+
+        # 右侧宽大的，直接用GridSizer放进Box
+        hbox1_2 = wx.BoxSizer(wx.HORIZONTAL)
+        self.grid = wx.grid.Grid(panel)
+        self.grid.CreateGrid(200, 20)  # 100行10列
+        hbox1_2.Add(self.grid, flag=wx.ALIGN_RIGHT, border=35)
+        hbox1.Add(hbox1_2, proportion=2)
+
+
+        # 最外层盒子添加内层1号盒子
+        self.boxsizer.Add(hbox1, flag= wx.TOP | wx.ALIGN_CENTER_VERTICAL, proportion=15, border=10)
+        # 下边距10
+        self.boxsizer.Add((-1, 10))
+
+
+        # 创建内层3号盒子，内含两个按钮，水平放置
+        self.hbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        # 按钮大小，名称设置
+        btn_back = wx.Button(panel, label='返回上层菜单', size=(120, 30))
+        btn_back.Bind(wx.EVT_LEFT_DOWN, self.back2home)
+        self.hbox3.Add(btn_back)
+        btn_exit = wx.Button(panel, label='退出系统', size=(120, 30))
+        self.hbox3.Add(btn_exit, flag=wx.LEFT | wx.BOTTOM, border=5)  # 按钮距离左侧和底部都是5
+        btn_exit.Bind(wx.EVT_LEFT_DOWN, self.closeFrame)
+
+        # 最外层盒子添加内层4号盒子，盒子右对齐，靠在外层盒子的右侧，边距10
+        self.boxsizer.Add(self.hbox3, flag=wx.ALIGN_RIGHT | wx.RIGHT, border=10)
+
+        panel.SetSizer(self.boxsizer)
+
+    def back2home(self, event):
+        self.parent.Show()
+        self.Destroy()
+        # self.Hide()
+        event.Skip()
+
+    def frameClose(self, event):
+        # 监听系统的关闭键
+        self.parent.Show()
+        event.Skip()
+
+    def export2Excel(self, event):
+        # 导出Excel文件
+        pass
+
+    def doSQL(self, event):
+        # 执行SQL文件
+        pass
+
+    def closeFrame(self, event):
+        # 关闭整个系统
+        self.parent.Close()
+        self.Destroy()
+        event.Skip()
+#
+# if __name__ == '__main__':
+#     app = wx.App()
+#     GUI_DATA(None)
+#     app.MainLoop()
