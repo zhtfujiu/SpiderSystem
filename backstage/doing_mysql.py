@@ -69,27 +69,32 @@ class Doing_mysql(object):
 
     # 导出至Excel
     def do_ecport2excel(self, tablename):
-        self.cur.execute('select * from '+tablename.encode("utf-8"))
-        # 重置游标位置
-        self.cur.scroll(0, mode='absolute')
-        results = self.cur.fetchall()
+        try:
+            self.cur.execute('select * from ' + tablename.encode("utf-8"))
+            # 重置游标位置
+            self.cur.scroll(0, mode='absolute')
+            results = self.cur.fetchall()
 
-        # 获取MYSQL里面的数据字段名称
-        fields = self.cur.description
-        workbook = xlsxwriter.Workbook(tablename.encode("utf-8")+'.xlsx')
-        sheet = workbook.add_worksheet()
+            # 获取MYSQL里面的数据字段名称
+            fields = self.cur.description
+            workbook = xlsxwriter.Workbook('/Users/fujiu/Desktop/' + tablename.encode("utf-8") + '.xlsx')
+            sheet = workbook.add_worksheet()
 
-        # 写上字段信息
-        for field in range(0, len(fields)):
-            sheet.write(0, field, fields[field][0])
+            # 写上字段信息
+            for field in range(0, len(fields)):
+                sheet.write(0, field, fields[field][0])
 
-        # 获取并写入数据段信息
-        for row in range(1, len(results) + 1):
-            for col in range(0, len(fields)):
-                sheet.write(row, col, u'%s' % results[row - 1][col])
+            # 获取并写入数据段信息
+            for row in range(1, len(results) + 1):
+                for col in range(0, len(fields)):
+                    sheet.write(row, col, u'%s' % results[row - 1][col])
 
-        workbook.close()
-        print '导出Excel文件成功，请前往项目根目录查看'
+            workbook.close()
+            print '导出Excel文件成功，请前往电脑桌面查看'
+            return True
+        except Exception, e:
+            print '导出Excel文件失败', e
+            return False
 
 
     # 关闭数据库连接

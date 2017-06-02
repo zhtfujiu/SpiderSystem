@@ -1,13 +1,10 @@
 # coding=UTF-8
-import wx, time, threading
-from selenium import webdriver
+import wx
 from backstage.doing_auto_login import Doing_Auto_login
-
-import chardet
+from backstage.doing_mysql import Doing_mysql
 
 class GUI_LOGIN(wx.Frame):
     def __init__(self, parent):
-        # self.driver = driver
         super(GUI_LOGIN, self).__init__(parent, title="登录", size=(500, 300))
         self.parent = parent  # 尝试用这个回到原界面
         self.Bind(wx.EVT_CLOSE, self.frameClose)  # 对系统进行监听关闭键
@@ -68,7 +65,6 @@ class GUI_LOGIN(wx.Frame):
     def back2home(self, event):
         self.parent.Show()
         self.Destroy()
-        # self.Hide()
         event.Skip()
 
     def frameClose(self, event):
@@ -78,7 +74,7 @@ class GUI_LOGIN(wx.Frame):
 
     def login(self,event):
         # 原线程
-        # while True:
+        while True:
             username = self.username_blank.GetLineText(0)
             psw = self.psw_blank.GetLineText(0)
 
@@ -94,32 +90,38 @@ class GUI_LOGIN(wx.Frame):
                                              '爬取成功', wx.YES_NO)
                     if dlg_1.ShowModal() == wx.ID_YES:
                         # 用户要求立即导出Excel文件，执行导出操作。
+                        doing_mysql = Doing_mysql()
+                        if doing_mysql.do_ecport2excel(username):
+                            # 导出成功
+                            dlg_1_1 = wx.MessageDialog(None, '导出成功，请前往桌面查看！', '导出Excel成功', wx.OK)
+                            if dlg_1_1.ShowModal() == wx.ID_OK:
+                                dlg_1_1.Destroy()
+                            return  # 成功的完成所有操作，退出至登录界面
+                        else:
+                            # 导出失败
+                            dlg_1_2 = wx.MessageDialog(None, '导出失败！', wx.OK)
+                            if dlg_1_2.ShowModal() == wx.ID_OK:
+                                dlg_1_2.Destroy()
+                            # 导出失败暂时不加循环了，心累！！！！
+                            return
 
-                        pass
                     else:
                         # 用户暂不希望导出，弹框关闭
                         dlg_1.Destroy()
-                        # return  # 退出循环
+                        return  # 退出循环
                 else:
                     # 爬取失败
-                    dlg_2 = wx.MessageDialog(None, '登录成功。个人信息爬取失败，点击刷新重新爬取。', '爬取失败', wx.OK)
+                    dlg_2 = wx.MessageDialog(None, '登录成功。个人信息爬取失败，请重新登录并爬取。', '爬取失败', wx.OK)
                     if dlg_2.ShowModal() == wx.ID_OK:
                         # 尝试再次爬取
                         print '重新爬取'
-                        pass
-                    # else:
-                        # 不做再次爬取
-                        # dlg_2.Destroy()  # 关闭消息框
-                        # return  # 退出循环
-
+                        dlg_2.Destroy()
 
             else:
                 # 登录失败，确认账号密码重新登录
                 dlg = wx.MessageDialog(None, '登陆失败，请核对用户名和密码！', '登录失败', wx.OK)
                 if dlg.ShowModal() == wx.ID_OK:
                     dlg.Destroy()
-                # else:
-                #     dlg.Destroy()
                 self.username_blank.Clear()
                 self.psw_blank.Clear()
 
