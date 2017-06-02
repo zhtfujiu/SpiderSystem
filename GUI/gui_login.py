@@ -1,9 +1,13 @@
 # coding=UTF-8
-import wx
+import wx, time, threading
+from selenium import webdriver
 from backstage.doing_auto_login import Doing_Auto_login
+
+import chardet
 
 class GUI_LOGIN(wx.Frame):
     def __init__(self, parent):
+        # self.driver = driver
         super(GUI_LOGIN, self).__init__(parent, title="登录", size=(500, 300))
         self.parent = parent  # 尝试用这个回到原界面
         self.Bind(wx.EVT_CLOSE, self.frameClose)  # 对系统进行监听关闭键
@@ -72,24 +76,62 @@ class GUI_LOGIN(wx.Frame):
         self.parent.Show()
         event.Skip()
 
-    def getUsername(self, event):
-        pass
-
-    def getPsw(self, event):
-        pass
-
     def login(self,event):
+        # 原线程
+        while True:
+            username = self.username_blank.GetLineText(0)
+            # print '1--username', username
+            # print '1--chardet.detect(username)', chardet.detect(username.decode('utf-8'))
 
-        username = self.username_blank.GetLineText(0)
-        psw = self.psw_blank.GetLineText(0)
-        print username, psw
-        # 实例化Auto_login_baidu类
-        auto_login = Doing_Auto_login(username, psw)
-        flag_login = auto_login.login()
-        # 后续爬取个人信息未完成
-        flag_save = auto_login.get_user_baike_info()
+            # print '2--'
 
-        event.Skip()
+            psw = self.psw_blank.GetLineText(0)
+
+            # username = username.decode('utf-8')
+
+            print username, psw
+            # 实例化Auto_login_baidu类
+            auto_login = Doing_Auto_login(self.parent.driver, username, psw)
+            if auto_login.login():
+                # 获得TRUE表示登录成功，可以执行爬取信息操作
+
+                # 后续爬取个人信息未完成
+                if auto_login.get_user_baike_info():
+                    # 爬取成功，弹框提示
+                    dlg_1 = wx.MessageDialog(None, '个人百科信息爬取成功，是否立即导出Excel文件到本机？',
+                                             '爬取成功', wx.YES_NO)
+                    if dlg_1.ShowModal() == wx.ID_YES:
+                        # 用户要求立即导出Excel文件，执行导出操作。
+
+                        pass
+                    else:
+                        # 用户暂不希望导出，弹框关闭
+                        dlg_1.Destroy()
+                else:
+                    # 爬取失败
+                    dlg_2 = wx.MessageDialog(None, '个人信息爬取失败，点击刷新重新爬取。', '爬取失败', wx.YES | wx.NO)
+                    if dlg_2.ShowModal() == wx.ID_YES:
+                        # 尝试再次爬取
+                        pass
+                    else:
+                        dlg_2.Destroy()
+
+
+            else:
+                # 登录失败，确认账号密码重新登录
+                dlg = wx.MessageDialog(None, '登陆失败，请核对用户名和密码！', '登录失败', wx.YES | wx.NO)
+                if dlg.ShowModal() == wx.ID_YES:
+                    dlg.Destroy()
+                else:
+                    dlg.Destroy()
+                self.username_blank.Clear()
+                self.psw_blank.Clear()
+
+            event.Skip()
+
+
+
+    # def
 
 #
 #

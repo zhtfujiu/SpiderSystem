@@ -5,8 +5,8 @@ from doing_mysql import Doing_mysql
 from selenium import webdriver
 
 class Doing_Auto_login(object):
-    def __init__(self, username, psw):
-        self.driver = webdriver.Chrome()
+    def __init__(self, driver, username, psw):
+        self.driver = driver
         self.username = username
         self.psw = psw
 
@@ -15,45 +15,40 @@ class Doing_Auto_login(object):
         login_url = 'https://passport.baidu.com/v2/?login'
 
         try:
-            while True:
+            self.driver.get(login_url)  # 把访问链接放在这，免得输入错误后
 
-                self.driver.get(login_url)  # 把访问链接放在这，免得输入错误后
+            username_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__userName")
+            psw_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__password")
+            login_btn = self.driver.find_element_by_id("TANGRAM__PSP_3__submit")
 
-                username_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__userName")
-                psw_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__password")
-                login_btn = self.driver.find_element_by_id("TANGRAM__PSP_3__submit")
+            # username = raw_input('请输入您的百度账号：\n')
+            # psw = raw_input('请输入您的百度账号密码：\n')
 
-                # username = raw_input('请输入您的百度账号：\n')
-                # psw = raw_input('请输入您的百度账号密码：\n')
+            username_blank.clear()
+            psw_blank.clear()
 
+            username_blank.send_keys(self.username)
+            # unicode(self.username, 'utf-8'))  # 编码问题，这里需要加上unicode
+            # UnicodeDecodeError: 'utf8' codec can't decode byte 0xe4 in position 0: unexpected end of data
+            # time.sleep(2)
+            psw_blank.send_keys(self.psw)
+            time.sleep(2)
 
-                # username = '伏久飞天'
-                # psw = '5556zht'
+            login_btn.click()
+            time.sleep(2)
+            # ***************************************
+            # 登录之后延迟一秒，检测当前页面是否仍然是登录url，如果是，则登录失败
+            # ***************************************
+            if self.driver.current_url == login_url:
+                # 登录失败
+                print '登录失败，请核对账户或密码！'
+                return False
+            else:
+                # 登录成功，转到下一个所需页面
+                print self.username, '登录成功！'
+                # self.username = self.username
+                return True
 
-                username_blank.clear()
-                psw_blank.clear()
-
-                username_blank.send_keys(self.username)
-                    # unicode(self.username, 'utf-8'))  # 编码问题，这里需要加上unicode
-                # UnicodeDecodeError: 'utf8' codec can't decode byte 0xe4 in position 0: unexpected end of data
-                # time.sleep(2)
-                psw_blank.send_keys(self.psw)
-                time.sleep(2)
-
-                login_btn.click()
-                time.sleep(2)
-                # ***************************************
-                # 登录之后延迟一秒，检测当前页面是否仍然是登录url，如果是，则登录失败
-                # ***************************************
-                if self.driver.current_url == login_url:
-                    # 登录失败
-                    print '登录失败，请核对账户或密码！'
-                else:
-                    # 登录成功，转到下一个所需页面
-                    print self.username, '登录成功！'
-                    # self.username = self.username
-
-                    return True
         except Exception, e:
             print '登录过程发生错误：', e
             return False

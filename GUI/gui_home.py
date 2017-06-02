@@ -1,14 +1,15 @@
 # coding=UTF-8
-import wx
+import wx, threading
 from gui_login import GUI_LOGIN
 from gui_spider import GUI_SPIDER
 from gui_data import GUI_DATA
-
+from selenium import webdriver
 
 import py2app
 
 class GUI_HOME(wx.Frame):
     def __init__(self, parent):
+        self.driver = None
         super(GUI_HOME, self).__init__(parent, title="百度百科爬虫及数据分析系统", size=(500, 300))
         self.parent = parent
         self.InitUI()
@@ -56,6 +57,10 @@ class GUI_HOME(wx.Frame):
         dc.DrawBitmap(bmp, 0, 0)
 
     def login(self, event):
+        if self.driver is None:
+            # 启动新的线程来创建Webdriver
+            t = threading.Thread(target=self.thread_for_driver, name='StartWebDriver')
+            t.start()
         self.Hide()
         GUI_LOGIN(self).Show()
         event.Skip()
@@ -75,6 +80,10 @@ class GUI_HOME(wx.Frame):
         self.Hide()
         self.example.Show()
         event.Skip()
+
+    # 子线程启动Webdriver的代码
+    def thread_for_driver(self):
+        self.driver = webdriver.Chrome()
 
 if __name__ == '__main__':
     app = wx.App()
