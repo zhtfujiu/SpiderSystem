@@ -54,7 +54,7 @@ class Doing_Auto_login(object):
             return False
 
     def get_user_baike_info(self):
-        try:
+        # try:
             # 转到个人百科页面
             self.driver.get('https://baike.baidu.com/usercenter')
             time.sleep(2)
@@ -88,7 +88,7 @@ class Doing_Auto_login(object):
 
             return True  # 返回真，证明存储完成
 
-        except Exception, e:
-            print '获取并存储个人信息时发生错误：', e
-            return False
+        # except Exception, e:
+        #     print '获取并存储个人信息时发生错误：', e
+        #     return False
 

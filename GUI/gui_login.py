@@ -78,27 +78,19 @@ class GUI_LOGIN(wx.Frame):
 
     def login(self,event):
         # 原线程
-        while True:
+        # while True:
             username = self.username_blank.GetLineText(0)
-            # print '1--username', username
-            # print '1--chardet.detect(username)', chardet.detect(username.decode('utf-8'))
-
-            # print '2--'
-
             psw = self.psw_blank.GetLineText(0)
-
-            # username = username.decode('utf-8')
 
             print username, psw
             # 实例化Auto_login_baidu类
             auto_login = Doing_Auto_login(self.parent.driver, username, psw)
             if auto_login.login():
                 # 获得TRUE表示登录成功，可以执行爬取信息操作
-
                 # 后续爬取个人信息未完成
                 if auto_login.get_user_baike_info():
                     # 爬取成功，弹框提示
-                    dlg_1 = wx.MessageDialog(None, '个人百科信息爬取成功，是否立即导出Excel文件到本机？',
+                    dlg_1 = wx.MessageDialog(None, '登录成功。个人百科信息爬取成功，是否立即导出Excel文件到本机？',
                                              '爬取成功', wx.YES_NO)
                     if dlg_1.ShowModal() == wx.ID_YES:
                         # 用户要求立即导出Excel文件，执行导出操作。
@@ -107,23 +99,27 @@ class GUI_LOGIN(wx.Frame):
                     else:
                         # 用户暂不希望导出，弹框关闭
                         dlg_1.Destroy()
+                        # return  # 退出循环
                 else:
                     # 爬取失败
-                    dlg_2 = wx.MessageDialog(None, '个人信息爬取失败，点击刷新重新爬取。', '爬取失败', wx.YES | wx.NO)
-                    if dlg_2.ShowModal() == wx.ID_YES:
+                    dlg_2 = wx.MessageDialog(None, '登录成功。个人信息爬取失败，点击刷新重新爬取。', '爬取失败', wx.OK)
+                    if dlg_2.ShowModal() == wx.ID_OK:
                         # 尝试再次爬取
+                        print '重新爬取'
                         pass
-                    else:
-                        dlg_2.Destroy()
+                    # else:
+                        # 不做再次爬取
+                        # dlg_2.Destroy()  # 关闭消息框
+                        # return  # 退出循环
 
 
             else:
                 # 登录失败，确认账号密码重新登录
-                dlg = wx.MessageDialog(None, '登陆失败，请核对用户名和密码！', '登录失败', wx.YES | wx.NO)
-                if dlg.ShowModal() == wx.ID_YES:
+                dlg = wx.MessageDialog(None, '登陆失败，请核对用户名和密码！', '登录失败', wx.OK)
+                if dlg.ShowModal() == wx.ID_OK:
                     dlg.Destroy()
-                else:
-                    dlg.Destroy()
+                # else:
+                #     dlg.Destroy()
                 self.username_blank.Clear()
                 self.psw_blank.Clear()
 

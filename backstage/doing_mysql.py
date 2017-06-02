@@ -18,8 +18,9 @@ class Doing_mysql(object):
 
     # 查询是否存在某某表
     def do_check_is_in(self, tablename):
-        sql_check = 'SELECT TABLE_NAME FROM information_schema.`TABLES` WHERE TABLE_SCHEMA=\'baike\' AND TABLE_NAME="' + unicode(
-            tablename, 'utf-8') + '";'
+        # sql_check = 'SELECT TABLE_NAME FROM information_schema.`TABLES` WHERE TABLE_SCHEMA=\'baike\' AND TABLE_NAME="' + unicode(
+        #     tablename, 'utf-8') + '";'
+        sql_check = 'SELECT TABLE_NAME FROM information_schema.`TABLES` WHERE TABLE_SCHEMA=\'baike\' AND TABLE_NAME="' + tablename.encode("utf-8") + '";'
         # 返回TRUE则证明不存在，FALSE则存在该表
         # print self.cur.execute(sql_check) == 0
         return self.cur.execute(sql_check) == 0
@@ -29,7 +30,7 @@ class Doing_mysql(object):
         # 首先检测数据库中是否存在该username的table
         if self.do_check_is_in(username):
             # 不存在该表，新建表格
-            sql = 'CREATE TABLE ' + username + ' (百度账号 CHAR(10) PRIMARY KEY,头像图片链接 CHAR(200), 百科等级 CHAR(3), 通过版本 CHAR(3), 优质版本 CHAR(3), 特色词条 CHAR(3), 提交版本 CHAR(3), 通过率 CHAR(3), 创建版本 CHAR(3), 财富值 CHAR(3));'
+            sql = 'CREATE TABLE ' + username.encode("utf-8") + ' (百度账号 CHAR(10) PRIMARY KEY,头像图片链接 CHAR(200), 百科等级 CHAR(3), 通过版本 CHAR(3), 优质版本 CHAR(3), 特色词条 CHAR(3), 提交版本 CHAR(3), 通过率 CHAR(3), 创建版本 CHAR(3), 财富值 CHAR(3));'
             self.cur.execute(sql)
             self.conn.commit()
 
@@ -53,29 +54,29 @@ class Doing_mysql(object):
 
     # 更新个人信息至百度百科个人账号表
     def do_add_userinfo(self, username, user_pic_url, user_level, tongguo, youzhi, tese, tijiao, tongguolv, chuangjian, caifuzhi):
-        sql = 'insert into '+username+' (百度账号, 头像图片链接, 百科等级, 通过版本, 优质版本, 特色词条, 提交版本, 通过率, 创建版本, 财富值) ' \
+        sql = 'insert into '+ username.encode("utf-8") +' (百度账号, 头像图片链接, 百科等级, 通过版本, 优质版本, 特色词条, 提交版本, 通过率, 创建版本, 财富值) ' \
               'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE ' \
               '百度账号=百度账号, 头像图片链接=头像图片链接, 百科等级=百科等级, 通过版本=通过版本 , ' \
               '优质版本=优质版本 , 特色词条=特色词条 , 提交版本=提交版本 , 通过率=通过率 , 创建版本=创建版本 , 财富值=财富值'
-        self.cur.execute(sql,(username, user_pic_url, user_level, tongguo, youzhi, tese, tijiao, tongguolv, chuangjian, caifuzhi))
+        self.cur.execute(sql,(username.encode("utf-8"), user_pic_url, user_level, tongguo, youzhi, tese, tijiao, tongguolv, chuangjian, caifuzhi))
         self.conn.commit()
 
     # 更新爬取信息至该词条table
     def do_add_entrydata(self, entry, name, url, abscract):
-        sql = 'insert into '+entry+' (name, url, abscract) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE name=name, url=url, abscract=abscract;'
-        self.cur.execute(sql, (name, url, abscract))
+        sql = 'insert into '+entry.encode("utf-8")+' (name, url, abscract) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE name=name, url=url, abscract=abscract;'
+        self.cur.execute(sql, (name.encode("utf-8"), url, abscract))
         self.conn.commit()
 
     # 导出至Excel
     def do_ecport2excel(self, tablename):
-        self.cur.execute('select * from '+unicode(tablename, 'utf-8'))
+        self.cur.execute('select * from '+tablename.encode("utf-8"))
         # 重置游标位置
         self.cur.scroll(0, mode='absolute')
         results = self.cur.fetchall()
 
         # 获取MYSQL里面的数据字段名称
         fields = self.cur.description
-        workbook = xlsxwriter.Workbook(unicode(tablename, 'utf-8')+'.xlsx')
+        workbook = xlsxwriter.Workbook(tablename.encode("utf-8")+'.xlsx')
         sheet = workbook.add_worksheet()
 
         # 写上字段信息
