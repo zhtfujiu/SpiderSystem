@@ -64,7 +64,7 @@ class Doing_mysql(object):
     # 更新爬取信息至该词条table
     def do_add_entrydata(self, entry, name, url, abscract):
         sql = 'insert into '+entry.encode("utf-8")+' (name, url, abscract) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE name=name, url=url, abscract=abscract;'
-        self.cur.execute(sql, (name.encode("utf-8"), url, abscract))
+        self.cur.execute(sql, (name.encode("utf-8"), url, abscract.encode('utf-8')))
         self.conn.commit()
 
     # 导出至Excel

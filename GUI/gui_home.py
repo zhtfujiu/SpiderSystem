@@ -47,6 +47,7 @@ class GUI_HOME(wx.Frame):
 
 
     def OnEraseBack(self, event):
+        # 设置主页面的背景图
         dc = event.GetDC()
         if not dc:
             dc = wx.ClientDC(self)
@@ -59,13 +60,17 @@ class GUI_HOME(wx.Frame):
     def login(self, event):
         if self.driver is None:
             # 启动新的线程来创建Webdriver
-            t = threading.Thread(target=self.thread_for_driver, name='StartWebDriver')
+            t = threading.Thread(target=self.thread_for_driver, name='Login')
             t.start()
         self.Hide()
         GUI_LOGIN(self).Show()
         event.Skip()
 
     def spider(self, event):
+        if self.driver is None:
+            # 启动新的线程来创建Webdriver
+            t = threading.Thread(target=self.thread_for_driver, name='Spider')
+            t.start()
         self.Hide()
         GUI_SPIDER(self).Show()
         event.Skip()
@@ -81,8 +86,13 @@ class GUI_HOME(wx.Frame):
         self.example.Show()
         event.Skip()
 
-    # 子线程启动Webdriver的代码
+    # 子线程启动登录时的Webdriver的代码
     def thread_for_driver(self):
+        self.driver = webdriver.Chrome()
+
+
+    # 子线程启动爬虫的Webdriver
+    def thread_spider_driver(self):
         self.driver = webdriver.Chrome()
 
 if __name__ == '__main__':

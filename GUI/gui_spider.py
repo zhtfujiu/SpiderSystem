@@ -1,5 +1,6 @@
 # coding=UTF-8
 import wx
+from backstage.doing_spider import Doing_Spider
 
 class GUI_SPIDER(wx.Frame):
     def __init__(self, parent):
@@ -55,7 +56,7 @@ class GUI_SPIDER(wx.Frame):
         self.hbox3.Add(btn_back)
         btn_spider = wx.Button(panel, label='启动爬虫', size=(120, 30))
         self.hbox3.Add(btn_spider, flag=wx.LEFT | wx.BOTTOM, border=5)  # 按钮距离左侧和底部都是5
-
+        btn_spider.Bind(wx.EVT_LEFT_DOWN, self.startSpider)
         # 最外层盒子添加内层4号盒子，盒子右对齐，靠在外层盒子的右侧，边距10
         self.boxsizer.Add(self.hbox3, flag=wx.ALIGN_RIGHT | wx.RIGHT, border=10)
 
@@ -73,6 +74,15 @@ class GUI_SPIDER(wx.Frame):
 
     def startSpider(self, event):
         # 启动爬虫
+        entry = self.entry_blank.GetLineText(0)
+        num = self.num_blank.GetLineText(0)
+        doing_spider = Doing_Spider(self.parent.driver, entry, num, self.status_text)
+        doing_spider.crawl()
+
+
+
+
+
         pass
 #
 # if __name__ == '__main__':
