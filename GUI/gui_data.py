@@ -167,8 +167,17 @@ class GUI_DATA(wx.Frame):
 
 
     def doSQL(self, event):
-        # 执行SQL文件
-        pass
+        # 执行SQL语句
+        self.grid.ClearGrid()
+        sql = self.sql_blank.GetValue()
+        # print sql
+        if self.doing_mysql.do_DIYsql2grid(sql, self.grid):
+            pass
+        else:
+            dlg = wx.MessageDialog(None, 'SQL执行失败，请仔细核对是否为语法问题！', '执行失败！', wx.OK)
+            if dlg.ShowModal() == wx.ID_OK:
+                dlg.Destroy()
+        event.Skip()
 
     def closeFrame(self, event):
         # 关闭整个系统
