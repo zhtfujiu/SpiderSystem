@@ -162,6 +162,7 @@ class GUI_DATA(wx.Frame):
 
     def emptyview(self, event):
         self.grid.ClearGrid()
+        self.entry_view_blank.Clear()
         event.Skip()
 
 
