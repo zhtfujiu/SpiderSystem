@@ -104,7 +104,7 @@ class GUI_DATA(wx.Frame):
 
         if self.doing_mysql.do_check_is_in(tablename):
             # 返回真证明不存在, 弹框提示
-            dlg = wx.MessageDialog(None, '该根词条数据表不存在，请核对或导出其他词条文件！', '词条文件不存在！', wx.OK)
+            dlg = wx.MessageDialog(None, tablename.encode('utf-8') + '数据表不存在，请核对或导出其他词条文件！', '词条文件不存在！', wx.OK)
             if dlg.ShowModal() == wx.ID_OK:
                 dlg.Destroy()
 
@@ -112,16 +112,17 @@ class GUI_DATA(wx.Frame):
             # 返回假证明存在, 执行导出操作
             if self.doing_mysql.do_ecport2excel(tablename):
                 # 导出成功
-                dlg = wx.MessageDialog(None, 'Excel文件导出成功，请前往桌面查看！', '导出成功！', wx.OK)
+                dlg = wx.MessageDialog(None, tablename.encode('utf-8') + '.xlsx文件导出成功，请前往桌面查看！', '导出成功！', wx.OK)
                 if dlg.ShowModal() == wx.ID_OK:
                     dlg.Destroy()
                     self.entry_blank.Clear()
             else:
                 # 导出失败
-                dlg = wx.MessageDialog(None, 'Excel文件导出失败，请重新尝试导出！', '导出失败！', wx.OK)
+                dlg = wx.MessageDialog(None, tablename.encode('utf-8') + '.xlsx文件导出失败，请重新尝试导出！', '导出失败！', wx.OK)
                 if dlg.ShowModal() == wx.ID_OK:
                     dlg.Destroy()
 
+        event.Skip()
 
 
     def doSQL(self, event):
