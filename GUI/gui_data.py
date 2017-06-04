@@ -1,10 +1,12 @@
 # coding=UTF-8
 import wx, wx.grid
+from backstage.doing_mysql import Doing_mysql
 
 class GUI_DATA(wx.Frame):
     def __init__(self, parent):
         super(GUI_DATA, self).__init__(parent, title="数据分析系统", size=(1200, 800))
         self.parent = parent
+        self.doing_mysql = Doing_mysql()
         self.Bind(wx.EVT_CLOSE, self.frameClose)  # 对系统进行监听关闭键
         self.InitUI()
         self.Centre()
@@ -32,6 +34,7 @@ class GUI_DATA(wx.Frame):
         hbox1_1.Add(hbox1_1_1, flag=wx.ALL, border=15)
 
         btn_export = wx.Button(panel, label='导出Excel', size=(120,30))
+        btn_export.Bind(wx.EVT_LEFT_DOWN, self.export2Excel)  # 监听事件，导出Excel
         hbox1_1.Add(btn_export, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
         hbox1_1.Add((-1,20))
         # ==============左侧第二个功能==========
@@ -45,6 +48,7 @@ class GUI_DATA(wx.Frame):
         hbox1_1.Add(hbox1_1_2, flag=wx.ALL, border=15)
 
         btn_dosql = wx.Button(panel, label='执行SQL语句', size=(120, 30))
+        btn_dosql.Bind(wx.EVT_LEFT_DOWN, self.doSQL)  # 监听事件，执行SQL语句
         hbox1_1.Add(btn_dosql, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
         hbox1_1.Add((-1, 20))
 
@@ -94,7 +98,29 @@ class GUI_DATA(wx.Frame):
 
     def export2Excel(self, event):
         # 导出Excel文件
-        pass
+        tablename = self.entry_blank.GetLineText(0)
+
+        if self.doing_mysql.do_check_is_in(tablename):
+            # 返回真证明不存在, 弹框提示
+            dlg = wx.MessageDialog(None, '该根词条数据表不存在，请核对或导出其他词条文件！', '词条文件不存在！', wx.OK)
+            if dlg.ShowModal() == wx.ID_OK:
+                dlg.Destroy()
+
+        else:
+            # 返回假证明存在, 执行导出操作
+            if self.doing_mysql.do_ecport2excel(tablename):
+                # 导出成功
+                dlg = wx.MessageDialog(None, 'Excel文件导出成功，请前往桌面查看！', '导出成功！', wx.OK)
+                if dlg.ShowModal() == wx.ID_OK:
+                    dlg.Destroy()
+                    self.entry_blank.Clear()
+            else:
+                # 导出失败
+                dlg = wx.MessageDialog(None, 'Excel文件导出失败，请重新尝试导出！', '导出失败！', wx.OK)
+                if dlg.ShowModal() == wx.ID_OK:
+                    dlg.Destroy()
+
+
 
     def doSQL(self, event):
         # 执行SQL文件
