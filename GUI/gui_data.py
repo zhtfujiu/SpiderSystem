@@ -24,6 +24,26 @@ class GUI_DATA(wx.Frame):
         # 左侧细长的盒子，垂直
         hbox1_1 = wx.BoxSizer(wx.VERTICAL)
 
+        # ==============左侧第三个功能=========
+
+        hbox1_1_3 = wx.BoxSizer(wx.HORIZONTAL)
+        static_str3 = wx.StaticText(panel, label='预览词条文件：')
+        hbox1_1_3.Add(static_str3, flag=wx.ALIGN_CENTER_VERTICAL)
+        self.entry_blank = wx.TextCtrl(panel)  # , size=(200,20))
+        hbox1_1_3.Add(self.entry_blank, flag=wx.ALIGN_CENTER_VERTICAL)
+
+        hbox1_1.Add(hbox1_1_3, flag=wx.ALL, border=15)
+
+        btn_view = wx.Button(panel, label='获取预览信息', size=(120, 30))
+        btn_view.Bind(wx.EVT_LEFT_DOWN, self.getview)  # 监听事件，获取预览信息
+        hbox1_1.Add(btn_view, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
+        hbox1_1.Add((-1, 5))
+
+        btn_empty = wx.Button(panel, label='清空预览信息', size=(120, 30))
+        btn_empty.Bind(wx.EVT_LEFT_DOWN, self.emptyview)  # 监听事件，清空预览信息
+        hbox1_1.Add(btn_empty, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
+        hbox1_1.Add((-1, 25))
+
         # =============左侧第一个功能==========
         hbox1_1_1 = wx.BoxSizer(wx.HORIZONTAL)
         static_str1 = wx.StaticText(panel, label='要导出Excel文件的根词条：')
@@ -36,7 +56,7 @@ class GUI_DATA(wx.Frame):
         btn_export = wx.Button(panel, label='导出Excel', size=(120,30))
         btn_export.Bind(wx.EVT_LEFT_DOWN, self.export2Excel)  # 监听事件，导出Excel
         hbox1_1.Add(btn_export, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
-        hbox1_1.Add((-1,20))
+        hbox1_1.Add((-1,25))
         # ==============左侧第二个功能==========
 
         hbox1_1_2 = wx.BoxSizer(wx.VERTICAL)
@@ -50,7 +70,10 @@ class GUI_DATA(wx.Frame):
         btn_dosql = wx.Button(panel, label='执行SQL语句', size=(120, 30))
         btn_dosql.Bind(wx.EVT_LEFT_DOWN, self.doSQL)  # 监听事件，执行SQL语句
         hbox1_1.Add(btn_dosql, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
-        hbox1_1.Add((-1, 20))
+        # hbox1_1.Add((-1, 20))
+
+
+
 
         # ===============右侧大表==============
         hbox1.Add(hbox1_1, proportion=2)
@@ -124,6 +147,14 @@ class GUI_DATA(wx.Frame):
 
         event.Skip()
 
+    def getview(self, event):
+
+        event.Skip()
+
+    def emptyview(self, event):
+
+        event.Skip()
+
 
     def doSQL(self, event):
         # 执行SQL文件
@@ -135,8 +166,3 @@ class GUI_DATA(wx.Frame):
         self.parent.Close()
         self.Destroy()
         event.Skip()
-#
-# if __name__ == '__main__':
-#     app = wx.App()
-#     GUI_DATA(None)
-#     app.MainLoop()
