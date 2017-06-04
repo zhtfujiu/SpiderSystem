@@ -77,22 +77,5 @@ class GUI_SPIDER(wx.Frame):
         entry = self.entry_blank.GetLineText(0)
         num = self.num_blank.GetLineText(0)
 
-
-
         doing_spider = Doing_Spider(self, self.parent.driver, entry, num, self.status_text)
-
         doing_spider.crawl()
-
-        # self.status_text.SetLabel('Hello SetLabel')
-        # self.status_text.Update()
-        # self.status_text.AppendText('Hello')
-        # self.status_text.Update()
-
-
-
-        pass
-#
-# if __name__ == '__main__':
-#     app = wx.App()
-#     GUI_SPIDER(None)
-#     app.MainLoop()

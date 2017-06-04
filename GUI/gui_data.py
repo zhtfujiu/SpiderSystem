@@ -86,6 +86,7 @@ class GUI_DATA(wx.Frame):
         panel.SetSizer(self.boxsizer)
 
     def back2home(self, event):
+        self.doing_mysql.do_end_sql()
         self.parent.Show()
         self.Destroy()
         # self.Hide()
@@ -94,6 +95,7 @@ class GUI_DATA(wx.Frame):
     def frameClose(self, event):
         # 监听系统的关闭键
         self.parent.Show()
+        self.doing_mysql.do_end_sql()
         event.Skip()
 
     def export2Excel(self, event):
@@ -128,6 +130,7 @@ class GUI_DATA(wx.Frame):
 
     def closeFrame(self, event):
         # 关闭整个系统
+        self.doing_mysql.do_end_sql()
         self.parent.Close()
         self.Destroy()
         event.Skip()

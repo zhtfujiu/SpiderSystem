@@ -96,12 +96,14 @@ class GUI_LOGIN(wx.Frame):
                             dlg_1_1 = wx.MessageDialog(None, '导出成功，请前往桌面查看！', '导出Excel成功', wx.OK)
                             if dlg_1_1.ShowModal() == wx.ID_OK:
                                 dlg_1_1.Destroy()
+                                doing_mysql.do_end_sql()
                             return  # 成功的完成所有操作，退出至登录界面
                         else:
                             # 导出失败
                             dlg_1_2 = wx.MessageDialog(None, '导出失败！', wx.OK)
                             if dlg_1_2.ShowModal() == wx.ID_OK:
                                 dlg_1_2.Destroy()
+                                doing_mysql.do_end_sql()
                             # 导出失败暂时不加循环了，心累！！！！
                             return
 
@@ -126,14 +128,3 @@ class GUI_LOGIN(wx.Frame):
                 self.psw_blank.Clear()
 
             event.Skip()
-
-
-
-    # def
-
-#
-#
-# if __name__ == '__main__':
-#     app = wx.App()
-#     GUI_LOGIN(None)
-#     app.MainLoop()
