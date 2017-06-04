@@ -1,6 +1,9 @@
 # coding=UTF-8
-import wx, wx.grid
-from backstage.doing_mysql import Doing_mysql
+import wx
+import wx.grid
+
+from doing_mysql import Doing_mysql
+
 
 class GUI_DATA(wx.Frame):
     def __init__(self, parent):

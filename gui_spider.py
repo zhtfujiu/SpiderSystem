@@ -1,6 +1,8 @@
 # coding=UTF-8
 import wx
-from backstage.doing_spider import Doing_Spider
+
+from doing_spider import Doing_Spider
+
 
 class GUI_SPIDER(wx.Frame):
     def __init__(self, parent):

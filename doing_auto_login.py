@@ -2,7 +2,6 @@
 
 import time
 from doing_mysql import Doing_mysql
-from selenium import webdriver
 
 class Doing_Auto_login(object):
     def __init__(self, driver, username, psw):
@@ -21,16 +20,10 @@ class Doing_Auto_login(object):
             psw_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__password")
             login_btn = self.driver.find_element_by_id("TANGRAM__PSP_3__submit")
 
-            # username = raw_input('请输入您的百度账号：\n')
-            # psw = raw_input('请输入您的百度账号密码：\n')
-
             username_blank.clear()
             psw_blank.clear()
 
             username_blank.send_keys(self.username)
-            # unicode(self.username, 'utf-8'))  # 编码问题，这里需要加上unicode
-            # UnicodeDecodeError: 'utf8' codec can't decode byte 0xe4 in position 0: unexpected end of data
-            # time.sleep(2)
             psw_blank.send_keys(self.psw)
             time.sleep(2)
 
@@ -46,7 +39,6 @@ class Doing_Auto_login(object):
             else:
                 # 登录成功，转到下一个所需页面
                 print self.username, '登录成功！'
-                # self.username = self.username
                 return True
 
         except Exception, e:

@@ -1,8 +1,13 @@
 # coding=UTF-8
 # 对百度百科Python词条及其1000个相关页面的词条及摘要数据进行爬取
 # 爬虫入口
-import html_outputer, url_manager, html_downloader, html_parser
 import wx
+
+import html_downloader
+import html_outputer
+import html_parser
+import url_manager
+
 
 class Doing_Spider(object):
 

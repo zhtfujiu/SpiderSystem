@@ -5,8 +5,6 @@ from gui_spider import GUI_SPIDER
 from gui_data import GUI_DATA
 from selenium import webdriver
 
-import py2app
-
 class GUI_HOME(wx.Frame):
     def __init__(self, parent):
         self.driver = None
@@ -43,7 +41,7 @@ class GUI_HOME(wx.Frame):
         btn3.Bind(wx.EVT_LEFT_DOWN, self.data)  # 数据分析
 
         panel.SetSizer(self.boxsizer)
-        panel.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBack)  # 背景图片
+        # panel.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBack)  # 背景图片
 
 
     def OnEraseBack(self, event):

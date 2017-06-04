@@ -1,7 +1,9 @@
 # coding=UTF-8
 import wx
-from backstage.doing_auto_login import Doing_Auto_login
-from backstage.doing_mysql import Doing_mysql
+from doing_mysql import Doing_mysql
+
+from doing_auto_login import Doing_Auto_login
+
 
 class GUI_LOGIN(wx.Frame):
     def __init__(self, parent):

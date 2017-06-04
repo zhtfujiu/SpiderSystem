@@ -1,9 +1,11 @@
 # coding=UTF-8
 import os
-from doing_spider import Doing_Spider
+
 from selenium import webdriver
+
 from doing_auto_login import Doing_Auto_login
 from doing_database import Doing_Database
+from doing_spider import Doing_Spider
 
 print '=====Python爬虫系统及数据分析系统（以百度百科为例）=====\n' \
       '\n' \
