@@ -44,7 +44,7 @@ class GUI_SPIDER(wx.Frame):
         # self.boxsizer.Add((-1, 10))
 
         # ================ 2号区域，直接放Text展示框，爬虫状态提示===========
-        self.status_text = wx.TextCtrl(panel, style=wx.TE_READONLY)  # 只读模式
+        self.status_text = wx.TextCtrl(panel, style=wx.TE_READONLY)  # 只读模式 |
         self.boxsizer.Add(self.status_text, proportion=1, flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP | wx.BOTTOM, border=10)
 
 
@@ -76,10 +76,17 @@ class GUI_SPIDER(wx.Frame):
         # 启动爬虫
         entry = self.entry_blank.GetLineText(0)
         num = self.num_blank.GetLineText(0)
-        doing_spider = Doing_Spider(self.parent.driver, entry, num, self.status_text)
+
+
+
+        doing_spider = Doing_Spider(self, self.parent.driver, entry, num, self.status_text)
+
         doing_spider.crawl()
 
-
+        # self.status_text.SetLabel('Hello SetLabel')
+        # self.status_text.Update()
+        # self.status_text.AppendText('Hello')
+        # self.status_text.Update()
 
 
 

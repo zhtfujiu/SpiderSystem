@@ -6,7 +6,8 @@ import wx
 
 class Doing_Spider(object):
 
-    def __init__(self, driver, entry, num, status_text):
+    def __init__(self, parent, driver, entry, num, status_text):
+        self.parent = parent
         self.entry = entry
         self.num = num
         self.driver = driver
@@ -19,6 +20,10 @@ class Doing_Spider(object):
 
     def crawl(self):
         driver = self.driver
+
+        self.parent.status_text.SetLabel('')
+        self.parent.status_text.Update()
+
         while True:
             driver.get('https://baike.baidu.com/')
             entry = self.entry
@@ -44,10 +49,14 @@ class Doing_Spider(object):
                     # 异常处理，避免无效URL带来的崩溃
                     try:
                         new_url = self.urls.get_new_url()  # 获取一个待爬取的URL，添加进URL管理器
-                        # now_text =  '正在爬取第'+count+'条: '+ new_url
-                        print new_url
+                        now_text =  u'%s : %s' % (count,new_url)
+                        # now_text =  count + new_url
+                        print now_text
                         # 把现在的信息添加在展示栏
-                        # self.status_text.AppendText(now_text)
+                        # self.parent.status_text.AppendText(count)
+                        # self.parent.status_text.Update()
+                        self.parent.status_text.AppendText(now_text+"\n")
+                        self.parent.status_text.Update()
 
                         html_content = self.downloader.download(new_url)  # 启动下载器，存储进html_content里
                         new_urls, new_data = self.parser.parse(new_url, html_content)  # 解析器对该URL的内容进行解析，分离出新的URL和数据
@@ -57,18 +66,33 @@ class Doing_Spider(object):
                         # 自定爬取数目
                         if count == num:
                             print num, '条数据已爬取完成'
+                            # self.parent.status_text.AppendText(num)
+                            # self.parent.status_text.Update()
+                            # self.parent.status_text.AppendText(u'条数据已爬取完成')
+                            # self.parent.status_text.Update()
                             break
                         count = count + 1
                     except:
                         print '本条爬取失败'
+                        self.parent.status_text.AppendText(u'本条爬取失败')
+                        self.parent.status_text.Update()
 
 
-                # try:
-                self.outputer.output_mysql()
-                print '数据已存储至数据库'
-                # except Exception, e:
-                #     print '存储过程错误：', e
 
+                try:
+                    self.outputer.output_mysql()
+                    print '数据已存储至数据库'
+                    self.parent.status_text.AppendText(u'数据已存储至数据库')
+                    self.parent.status_text.Update()
+
+                    dlg = wx.MessageDialog(None, '词条信息爬取完毕，并保存至数据库相应的数据表中。', '爬取成功！', wx.OK)
+                    if dlg.ShowModal() == wx.ID_OK:
+                        dlg.Destroy()
+
+                except Exception, e:
+                    print '存储过程错误：', e
+                    self.parent.status_text.AppendText(u'存储过程错误')
+                    self.parent.status_text.Update()
                 break
             else:
                 print '您输入的词条不存在，请重新输入'
