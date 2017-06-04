@@ -96,6 +96,33 @@ class Doing_mysql(object):
             print '导出Excel文件失败', e
             return False
 
+    # 获取预览信息（Data界面第一个功能需要）
+    def do_getdata2grid(self, tablename, grid):
+        try:
+            self.cur.execute('select * from ' + tablename.encode("utf-8"))
+            # 重置游标位置
+            self.cur.scroll(0, mode='absolute')
+            results = self.cur.fetchall()
+
+            # 获取MYSQL里面的数据字段名称
+            fields = self.cur.description
+
+            # 写上字段信息
+            for field in range(0, len(fields)):
+                grid.SetCellValue(0, field, fields[field][0])
+
+            if len(results) > 100:
+                grid.AppendRows(len(results)-100)
+
+            # 获取并写入数据段信息
+            for row in range(1, len(results) + 1):
+                for col in range(0, len(fields)):
+                    grid.SetCellValue(row, col, u'%s' % results[row - 1][col])
+
+            return True
+        except Exception, e:
+            print '获取预览信息失败', e
+            return False
 
     # 关闭数据库连接
     def do_end_sql(self):

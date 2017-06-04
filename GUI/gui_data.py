@@ -29,8 +29,8 @@ class GUI_DATA(wx.Frame):
         hbox1_1_3 = wx.BoxSizer(wx.HORIZONTAL)
         static_str3 = wx.StaticText(panel, label='预览词条文件：')
         hbox1_1_3.Add(static_str3, flag=wx.ALIGN_CENTER_VERTICAL)
-        self.entry_blank = wx.TextCtrl(panel)  # , size=(200,20))
-        hbox1_1_3.Add(self.entry_blank, flag=wx.ALIGN_CENTER_VERTICAL)
+        self.entry_view_blank = wx.TextCtrl(panel)  # , size=(200,20))
+        hbox1_1_3.Add(self.entry_view_blank, flag=wx.ALIGN_CENTER_VERTICAL)
 
         hbox1_1.Add(hbox1_1_3, flag=wx.ALL, border=15)
 
@@ -60,7 +60,7 @@ class GUI_DATA(wx.Frame):
         # ==============左侧第二个功能==========
 
         hbox1_1_2 = wx.BoxSizer(wx.VERTICAL)
-        static_str2 = wx.StaticText(panel, label='【开发者选项】\n请按语法规定输入SQL语句：')
+        static_str2 = wx.StaticText(panel, label='【开发者选项】 慎选！\n请按语法规定输入SQL语句：')
         hbox1_1_2.Add(static_str2, flag=wx.EXPAND | wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL)
         self.sql_blank = wx.TextCtrl(panel, style=wx.TE_MULTILINE, size=(240, 100))  # , size=(200,20))
         hbox1_1_2.Add(self.sql_blank, flag=wx.EXPAND | wx.TOP, border=15)
@@ -70,9 +70,6 @@ class GUI_DATA(wx.Frame):
         btn_dosql = wx.Button(panel, label='执行SQL语句', size=(120, 30))
         btn_dosql.Bind(wx.EVT_LEFT_DOWN, self.doSQL)  # 监听事件，执行SQL语句
         hbox1_1.Add(btn_dosql, flag=wx.ALIGN_CENTER_HORIZONTAL | wx.EXPAND | wx.LEFT | wx.RIGHT, border=15)
-        # hbox1_1.Add((-1, 20))
-
-
 
 
         # ===============右侧大表==============
@@ -82,7 +79,10 @@ class GUI_DATA(wx.Frame):
         # 右侧宽大的，直接用GridSizer放进Box
         hbox1_2 = wx.BoxSizer(wx.HORIZONTAL)
         self.grid = wx.grid.Grid(panel)
-        self.grid.CreateGrid(200, 20)  # 100行10列
+        self.grid.CreateGrid(100, 10)  # 100行10列
+        # self.grid.SetCellValue(0,0,'hello')
+
+
         hbox1_2.Add(self.grid, flag=wx.ALIGN_RIGHT, border=35)
         hbox1.Add(hbox1_2, proportion=2)
 
@@ -92,7 +92,7 @@ class GUI_DATA(wx.Frame):
         # 下边距10
         self.boxsizer.Add((-1, 10))
 
-
+        # ==============底部按钮==============
         # 创建内层3号盒子，内含两个按钮，水平放置
         self.hbox3 = wx.BoxSizer(wx.HORIZONTAL)
         # 按钮大小，名称设置
@@ -148,11 +148,20 @@ class GUI_DATA(wx.Frame):
         event.Skip()
 
     def getview(self, event):
+        entry = self.entry_view_blank.GetLineText(0)
+        if self.doing_mysql.do_check_is_in(entry):
+            # 返回真证明不存在, 弹框提示
+            dlg = wx.MessageDialog(None, entry.encode('utf-8') + '数据表不存在，请核对或导出其他词条文件！', '词条文件不存在！', wx.OK)
+            if dlg.ShowModal() == wx.ID_OK:
+                dlg.Destroy()
+        else:
+            self.doing_mysql.do_getdata2grid(entry, self.grid)
+            self.grid.Update()
 
         event.Skip()
 
     def emptyview(self, event):
-
+        self.grid.ClearGrid()
         event.Skip()
 
 
