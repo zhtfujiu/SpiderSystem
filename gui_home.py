@@ -98,6 +98,7 @@ class GUI_HOME(wx.Frame):
         self.driver = webdriver.Chrome()
         self.driver.get(self.url)
 
+    # 修改页面URL，节约时间
     def thread_change_url(self):
         if self.driver.current_url != self.url:
             self.driver.get(self.url)
