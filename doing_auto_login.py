@@ -14,7 +14,9 @@ class Doing_Auto_login(object):
         login_url = 'https://passport.baidu.com/v2/?login'
 
         try:
-            self.driver.get(login_url)  # 把访问链接放在这，免得输入错误后
+
+            if self.driver.current_url != login_url:
+                self.driver.get(login_url)  # 把访问链接放在这，免得输入错误后
 
             username_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__userName")
             psw_blank = self.driver.find_element_by_id("TANGRAM__PSP_3__password")

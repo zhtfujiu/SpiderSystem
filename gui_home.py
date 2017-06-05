@@ -8,6 +8,7 @@ from selenium import webdriver
 class GUI_HOME(wx.Frame):
     def __init__(self, parent):
         self.driver = None
+        self.url = 'https://passport.baidu.com/v2/?login'  # 默认登录URL
         super(GUI_HOME, self).__init__(parent, title="百度百科爬虫及数据分析系统", size=(500, 300))
         self.parent = parent
         self.InitUI()
@@ -56,18 +57,26 @@ class GUI_HOME(wx.Frame):
         dc.DrawBitmap(bmp, 0, 0)
 
     def login(self, event):
+        self.url = 'https://passport.baidu.com/v2/?login'
         if self.driver is None:
             # 启动新的线程来创建Webdriver
             t = threading.Thread(target=self.thread_for_driver, name='Login')
+            t.start()
+        else:
+            t = threading.Thread(target=self.thread_change_url, name='SpiderUrl')
             t.start()
         self.Hide()
         GUI_LOGIN(self).Show()
         event.Skip()
 
     def spider(self, event):
+        self.url = 'https://baike.baidu.com/'
         if self.driver is None:
             # 启动新的线程来创建Webdriver
             t = threading.Thread(target=self.thread_for_driver, name='Spider')
+            t.start()
+        else:
+            t = threading.Thread(target=self.thread_change_url, name='SpiderUrl')
             t.start()
         self.Hide()
         GUI_SPIDER(self).Show()
@@ -87,11 +96,17 @@ class GUI_HOME(wx.Frame):
     # 子线程启动登录时的Webdriver的代码
     def thread_for_driver(self):
         self.driver = webdriver.Chrome()
+        self.driver.get(self.url)
+
+    def thread_change_url(self):
+        if self.driver.current_url != self.url:
+            self.driver.get(self.url)
 
 
-    # 子线程启动爬虫的Webdriver
-    def thread_spider_driver(self):
-        self.driver = webdriver.Chrome()
+
+    # # 子线程启动爬虫的Webdriver
+    # def thread_spider_driver(self):
+    #     self.driver = webdriver.Chrome()
 
 if __name__ == '__main__':
     app = wx.App()

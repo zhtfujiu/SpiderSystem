@@ -29,8 +29,12 @@ class Doing_Spider(object):
         self.parent.status_text.SetLabel('')
         self.parent.status_text.Update()
 
+        spider_url = 'https://baike.baidu.com/'
+
         while True:
-            driver.get('https://baike.baidu.com/')
+            if driver.current_url != spider_url:
+                driver.get(spider_url)
+
             entry = self.entry
             # 锁定页面的输入框，将用户词条输入
             driver.find_element_by_id("query").send_keys(entry)  # 注意汉语编码
