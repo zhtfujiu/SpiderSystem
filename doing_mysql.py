@@ -30,7 +30,7 @@ class Doing_mysql(object):
         # 首先检测数据库中是否存在该username的table
         if self.do_check_is_in(username):
             # 不存在该表，新建表格
-            sql = 'CREATE TABLE ' + username.encode("utf-8") + ' (百度账号 CHAR(10) PRIMARY KEY,头像图片链接 CHAR(200), 百科等级 CHAR(3), 通过版本 CHAR(3), 优质版本 CHAR(3), 特色词条 CHAR(3), 提交版本 CHAR(3), 通过率 CHAR(3), 创建版本 CHAR(3), 财富值 CHAR(3));'
+            sql = 'CREATE TABLE ' + username.encode("utf-8") + ' (百度账号 CHAR(20) PRIMARY KEY,头像图片链接 CHAR(200), 百科等级 CHAR(3), 通过版本 CHAR(3), 优质版本 CHAR(3), 特色词条 CHAR(3), 提交版本 CHAR(3), 通过率 CHAR(3), 创建版本 CHAR(3), 财富值 CHAR(3));'
             self.cur.execute(sql)
             self.conn.commit()
 

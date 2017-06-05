@@ -93,26 +93,26 @@ class GUI_LOGIN(wx.Frame):
                     if dlg_1.ShowModal() == wx.ID_YES:
                         # 用户要求立即导出Excel文件，执行导出操作。
                         doing_mysql = Doing_mysql()
-                        if doing_mysql.do_ecport2excel(username):
+                        if doing_mysql.do_ecport2excel(auto_login.get_html_username()):
                             # 导出成功
                             dlg_1_1 = wx.MessageDialog(None, '导出成功，请前往桌面查看！', '导出Excel成功', wx.OK)
                             if dlg_1_1.ShowModal() == wx.ID_OK:
                                 dlg_1_1.Destroy()
                                 doing_mysql.do_end_sql()
-                            return  # 成功的完成所有操作，退出至登录界面
+                            break  # 成功的完成所有操作，退出至登录界面
                         else:
                             # 导出失败
-                            dlg_1_2 = wx.MessageDialog(None, '导出失败！', wx.OK)
+                            dlg_1_2 = wx.MessageDialog(None, '导出失败！', '错误', wx.OK)
                             if dlg_1_2.ShowModal() == wx.ID_OK:
                                 dlg_1_2.Destroy()
                                 doing_mysql.do_end_sql()
                             # 导出失败暂时不加循环了，心累！！！！
-                            return
+                            break
 
                     else:
                         # 用户暂不希望导出，弹框关闭
                         dlg_1.Destroy()
-                        return  # 退出循环
+                        break  # 退出循环
                 else:
                     # 爬取失败
                     dlg_2 = wx.MessageDialog(None, '登录成功。个人信息爬取失败，请重新登录并爬取。', '爬取失败', wx.OK)
@@ -128,5 +128,6 @@ class GUI_LOGIN(wx.Frame):
                     dlg.Destroy()
                 self.username_blank.Clear()
                 self.psw_blank.Clear()
+                break
 
-            event.Skip()
+        event.Skip()

@@ -46,14 +46,19 @@ class Doing_Auto_login(object):
             return False
 
     def get_user_baike_info(self):
-        # try:
+        try:
             # 转到个人百科页面
             self.driver.get('https://baike.baidu.com/usercenter')
             time.sleep(2)
             # 创建个人数据表，以username为table名称来
             doing_mysql = Doing_mysql()
-            doing_mysql.do_create_info_table(self.username)
+
             # 摘取个人信息
+            user_name = self.driver.find_element_by_xpath(
+                '/html/body/div[2]/div[1]/div/div[1]/div[2]/i').text  # 用户名
+
+            self.html_username = user_name  # 用一个全局变量保存界面读取的用户名
+
             user_pic_url = self.driver.find_element_by_xpath(
                 '/html/body/div[2]/div[1]/div/div[1]/div[1]/img').get_attribute('src')  # 头像图片链接
             user_level = self.driver.find_element_by_xpath(
@@ -71,16 +76,19 @@ class Doing_Auto_login(object):
             caifuzhi = self.driver.find_element_by_xpath(
                 '/html/body/div[2]/div[1]/div/div[2]/div/div/label/i').text  # 财富值
 
+            doing_mysql.do_create_info_table(user_name)
             # 将信息写入数据库
-            doing_mysql.do_add_userinfo(self.username, user_pic_url, user_level, tongguo, youzhi, tese, tijiao,
+            doing_mysql.do_add_userinfo(user_name, user_pic_url, user_level, tongguo, youzhi, tese, tijiao,
                                         tongguolv, chuangjian, caifuzhi)
-            print self.username,'用户的个人信息已保存至baike数据库的',self.username,'表中。'
+            print self.username,'用户的个人信息已保存至baike数据库的',user_name,'表中。'
             # 关闭数据库
             doing_mysql.do_end_sql()
 
             return True  # 返回真，证明存储完成
 
-        # except Exception, e:
-        #     print '获取并存储个人信息时发生错误：', e
-        #     return False
+        except Exception, e:
+            print '获取并存储个人信息时发生错误：', e
+            return False
 
+    def get_html_username(self):
+        return self.html_username
