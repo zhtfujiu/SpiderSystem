@@ -69,6 +69,7 @@ class GUI_HOME(wx.Frame):
         GUI_LOGIN(self).Show()
         event.Skip()
 
+
     def spider(self, event):
         self.url = 'https://baike.baidu.com/'
         if self.driver is None:
